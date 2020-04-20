@@ -2,13 +2,16 @@ package com.cursoandroid.gestordegastos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Application;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import io.paperdb.Paper;
+
+public class MainActivity extends Application {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void onCreate() {
+        super.onCreate();
+        Paper.init(this);
     }
 }
