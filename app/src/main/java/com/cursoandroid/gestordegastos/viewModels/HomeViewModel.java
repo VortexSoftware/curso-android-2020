@@ -38,11 +38,11 @@ public class HomeViewModel extends ViewModel {
 
     public ArrayList<Expense> generateExpenses() {
         expenses.setValue(new ArrayList<Expense>());
-        expenses.getValue().add(new Expense("$489", "Caja grande", "Comida", "Martes 15 de Abril de 2020 "));
-        expenses.getValue().add(new Expense("$139", "Caja chica", "Impuestos", "Martes 15 de Abril de 2020 "));
-        expenses.getValue().add(new Expense("$289", "Caja chica", "Libreria", "Martes 15 de Abril de 2020 "));
-        expenses.getValue().add(new Expense("$589", "Caja grande", "Comida", "Martes 15 de Abril de 2020 "));
-        expenses.getValue().add(new Expense("$589", "Caja grande", "Comida", "Martes 15 de Abril de 2020 "));
+        expenses.getValue().add(new Expense("1","$489", "Caja grande", "Constantino", "Martes 15 de Abril de 2020", "Comida", "ARS - PESOS", "5", "Esto es una descripción"));
+        expenses.getValue().add(new Expense("2","$139", "Caja chica", "Copitec", "Martes 15 de Abril de 2020", "Libreria", "ARS - PESOS", "0", "Esto es una descripción"));
+        expenses.getValue().add(new Expense("3","$289", "Caja chica", "Super", "Martes 15 de Abril de 2020", "Articulos de limpieza", "ARS - PESOS", "5", "Esto es una descripción 2"));
+        expenses.getValue().add(new Expense("4","$589", "Caja grande", "Constantino", "Martes 15 de Abril de 2020", "Comida", "ARS - PESOS", "6", "Esto es una descripción"));
+        expenses.getValue().add(new Expense("5","$589", "Caja grande", "Constantino", "Martes 15 de Abril de 2020", "Comida", "ARS - PESOS", "1", "Esto es una descripción"));
         return expenses.getValue();
     }
 

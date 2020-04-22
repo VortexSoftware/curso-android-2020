@@ -1,5 +1,6 @@
 package com.cursoandroid.gestordegastos.views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -7,7 +8,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cursoandroid.gestordegastos.R;
@@ -40,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         viewModel.getButonNewExpense().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                Toast.makeText(HomeActivity.this, "go to new expense", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this,NewExpenseActivity.class));
             }
         });
     }
@@ -54,10 +58,35 @@ public class HomeActivity extends AppCompatActivity {
         adapter.setListener(new ExpensesAdapter.ExpensesAdapterInterface() {
             @Override
             public void onItemClick(Expense expense) {
-                Toast.makeText(HomeActivity.this, expense.getAccount(), Toast.LENGTH_SHORT).show();
+                goToDetailExpenseActivity(expense);
             }
         });
     }
 
+    public void goToDetailExpenseActivity(Expense expense){
+        Intent intent = new Intent(this,DetailExpenseActivity.class);
+        intent.putExtra("expense",expense);
+        startActivity(intent);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.manu_action_bar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.buttonLogout){
+            logout();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        SessionPersistence.deleteUser();
+        startActivity(new Intent(this,LoginActivity.class));
+        finish();
+    }
 }
