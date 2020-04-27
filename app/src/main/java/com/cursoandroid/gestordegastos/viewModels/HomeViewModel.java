@@ -3,7 +3,11 @@ package com.cursoandroid.gestordegastos.viewModels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cursoandroid.gestordegastos.models.Account;
+import com.cursoandroid.gestordegastos.models.Category;
+import com.cursoandroid.gestordegastos.models.Currency;
 import com.cursoandroid.gestordegastos.models.Expense;
+import com.cursoandroid.gestordegastos.models.Provider;
 import com.cursoandroid.gestordegastos.models.User;
 import com.cursoandroid.gestordegastos.repositories.HomeRepository;
 
@@ -37,13 +41,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public ArrayList<Expense> generateExpenses() {
-        expenses.setValue(new ArrayList<Expense>());
-        expenses.getValue().add(new Expense("1","$489", "Caja grande", "Constantino", "Martes 15 de Abril de 2020", "Comida", "ARS - PESOS", "5", "Esto es una descripción"));
-        expenses.getValue().add(new Expense("2","$139", "Caja chica", "Copitec", "Martes 15 de Abril de 2020", "Libreria", "ARS - PESOS", "0", "Esto es una descripción"));
-        expenses.getValue().add(new Expense("3","$289", "Caja chica", "Super", "Martes 15 de Abril de 2020", "Articulos de limpieza", "ARS - PESOS", "5", "Esto es una descripción 2"));
-        expenses.getValue().add(new Expense("4","$589", "Caja grande", "Constantino", "Martes 15 de Abril de 2020", "Comida", "ARS - PESOS", "6", "Esto es una descripción"));
-        expenses.getValue().add(new Expense("5","$589", "Caja grande", "Constantino", "Martes 15 de Abril de 2020", "Comida", "ARS - PESOS", "1", "Esto es una descripción"));
-        return expenses.getValue();
+        return getHomeRepository().getExpensesFromDatabase();
     }
 
     public void setupUserInfo() {

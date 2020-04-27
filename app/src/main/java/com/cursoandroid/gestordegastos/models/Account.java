@@ -1,6 +1,8 @@
 package com.cursoandroid.gestordegastos.models;
 
-public class Account {
+import java.io.Serializable;
+
+public class Account implements Serializable {
     private String id;
     private String name;
     private Currency currency;

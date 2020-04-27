@@ -43,6 +43,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:text="@{newExpenseViewModel.expense.account.name}"
                             android:hint="Seleccione una cuenta"
                             android:textColorHint="@color/black" />
 
@@ -69,6 +70,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:text="@{newExpenseViewModel.expense.category.name}"
                             android:hint="Seleccione una categoría"
                             android:textColorHint="@color/black" />
 
@@ -95,6 +97,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:text="@{newExpenseViewModel.expense.provider.name}"
                             android:hint="Seleccione un proveedor"
                             android:textColorHint="@color/black" />
 
@@ -121,6 +124,8 @@
                             android:id="@+id/txtAmount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"
+                            android:text="@={newExpenseViewModel.amount}"
                             android:hint="Monto" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,6 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
+                        android:text="@{newExpenseViewModel.expense.account.currency.symbol}"
                         tools:text="ARS" />
 
                 </LinearLayout>
@@ -140,6 +146,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtDesciption"
+                        android:text="@={newExpenseViewModel.description}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Descripcion" />
@@ -153,7 +160,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtQuantity"
                         android:layout_width="match_parent"
+                        android:text="@={newExpenseViewModel.quantity}"
                         android:layout_height="wrap_content"
+                        android:inputType="number"
                         android:hint="Cantidad" />
                 </com.google.android.material.textfield.TextInputLayout>
 

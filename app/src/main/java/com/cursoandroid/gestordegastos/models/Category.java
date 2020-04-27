@@ -1,6 +1,8 @@
 package com.cursoandroid.gestordegastos.models;
 
-public class Category {
+import java.io.Serializable;
+
+public class Category implements Serializable {
     private String id;
     private String name;
 

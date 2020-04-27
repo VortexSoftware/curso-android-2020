@@ -5,27 +5,27 @@ import java.io.Serializable;
 public class Expense implements Serializable {
     private String id;
     private String amount;
-    private String account;
-    private String provider;
+    private Account account;
+    private Provider provider;
     private String date;
-    private String category;
-    private String currency;
+    private Category category;
     private String itemQuantity;
     private String description;
 
 
-    public Expense(String id, String amount, String account, String provider, String date, String category, String currency, String itemQuantity, String description) {
+    public Expense(String id, String amount, Account account, Provider provider, String date, Category category, String itemQuantity, String description) {
         this.amount = amount;
-        this.account = account;
-        this.provider = provider;
         this.date = date;
-        this.category = category;
-        this.currency = currency;
         this.itemQuantity = itemQuantity;
         this.description = description;
         this.id = id;
+        this.account = account;
+        this.provider = provider;
+        this.category = category;
     }
 
+    public Expense() {
+    }
 
     public String getId() {
         return id;
@@ -43,20 +43,28 @@ public class Expense implements Serializable {
         this.amount = amount;
     }
 
-    public String getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(String account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 
-    public String getProvider() {
+    public Provider getProvider() {
         return provider;
     }
 
-    public void setProvider(String provider) {
+    public void setProvider(Provider provider) {
         this.provider = provider;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String getDate() {
@@ -67,21 +75,7 @@ public class Expense implements Serializable {
         this.date = date;
     }
 
-    public String getCategory() {
-        return category;
-    }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
 
     public String getItemQuantity() {
         return itemQuantity;

@@ -37,7 +37,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:textColor="@color/black"
-                    android:text="@{detailExpenseViewModel.expense.account}"
+                    android:text="@{detailExpenseViewModel.expense.account.name}"
                     android:textSize="32sp"
                     tools:text="Account" />
 
@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:text="@{detailExpenseViewModel.expense.currency}"
+                    android:text="@{detailExpenseViewModel.expense.account.currency.symbol}"
                     android:textColor="@color/black"
                     tools:text="Currency" />
 
@@ -56,7 +56,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:textColor="@color/black"
-                    android:text="@{detailExpenseViewModel.expense.category}"
+                    android:text="@{detailExpenseViewModel.expense.category.name}"
                     android:textSize="32sp"
                     tools:text="Category" />
 
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@{detailExpenseViewModel.expense.provider}"
+                    android:text="@{detailExpenseViewModel.expense.provider.name}"
                     android:layout_margin="5dp"
                     android:textColor="@color/black"
                     tools:text="Provider" />

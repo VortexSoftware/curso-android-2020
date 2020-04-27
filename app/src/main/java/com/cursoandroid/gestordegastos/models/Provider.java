@@ -1,6 +1,8 @@
 package com.cursoandroid.gestordegastos.models;
 
-public class Provider {
+import java.io.Serializable;
+
+public class Provider implements Serializable {
     private String id;
     private String name;
 

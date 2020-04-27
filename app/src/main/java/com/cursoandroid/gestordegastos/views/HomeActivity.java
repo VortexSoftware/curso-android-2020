@@ -36,8 +36,14 @@ public class HomeActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding.setHomeViewModel(viewModel);
         viewModel.setupUserInfo();
-        setupRecyclerView();
         setupObservers();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupRecyclerView();
     }
 
     private void setupObservers() {
@@ -86,6 +92,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void logout() {
         SessionPersistence.deleteUser();
+        SessionPersistence.deleteExpenses();
         startActivity(new Intent(this,LoginActivity.class));
         finish();
     }
