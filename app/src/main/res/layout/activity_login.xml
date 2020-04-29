@@ -2,7 +2,7 @@
 <layout>
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="loginViewModel"
             type="com.cursoandroid.gestordegastos.viewModels.LoginViewModel" />
@@ -103,5 +103,9 @@
             </LinearLayout>
         </ScrollView>
 
+    <include
+        android:id="@+id/layoutOverlay"
+        layout="@layout/layout_overlay"
+        android:visibility="@{loginViewModel.showOverlay?View.VISIBLE:View.GONE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

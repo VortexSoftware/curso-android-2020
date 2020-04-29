@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cursoandroid.gestordegastos.R;
 import com.cursoandroid.gestordegastos.databinding.ActivityLoginBinding;
 import com.cursoandroid.gestordegastos.helpers.SessionPersistence;
 import com.cursoandroid.gestordegastos.models.User;
+import com.cursoandroid.gestordegastos.repositories.LoginRepository;
 import com.cursoandroid.gestordegastos.viewModels.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
             viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
             binding.setLoginViewModel(viewModel);
+            binding.setLifecycleOwner(this);
             setupObservers();
         }
     }
@@ -51,9 +54,21 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (validateField()) {
-                    viewModel.saveUser();
-                    goToHomeActivity();
+                    viewModel.makeLogin();
                 }
+            }
+        });
+
+        viewModel.getOnLoginSuccessData().observe(this, new Observer<LoginRepository.OnLoginSuccess>() {
+            @Override
+            public void onChanged(LoginRepository.OnLoginSuccess onLoginSuccess) {
+                goToHomeActivity();
+            }
+        });
+        viewModel.getOnLoginFailData().observe(this, new Observer<LoginRepository.OnLoginFail>() {
+            @Override
+            public void onChanged(LoginRepository.OnLoginFail onLoginFail) {
+                Toast.makeText(LoginActivity.this, onLoginFail.getError(), Toast.LENGTH_SHORT).show();
             }
         });
     }
