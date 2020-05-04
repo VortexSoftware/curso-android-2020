@@ -1,5 +1,7 @@
 package com.cursoandroid.gestordegastos.models;
 
+import com.cursoandroid.gestordegastos.utils.DateUtils;
+
 import java.io.Serializable;
 
 public class Expense implements Serializable {
@@ -7,16 +9,16 @@ public class Expense implements Serializable {
     private String amount;
     private Account account;
     private Provider provider;
-    private String date;
+    private String createdAt;
     private Category category;
-    private String itemQuantity;
+    private String numberOfItems;
     private String description;
 
 
     public Expense(String id, String amount, Account account, Provider provider, String date, Category category, String itemQuantity, String description) {
         this.amount = amount;
-        this.date = date;
-        this.itemQuantity = itemQuantity;
+        this.createdAt = date;
+        this.numberOfItems = itemQuantity;
         this.description = description;
         this.id = id;
         this.account = account;
@@ -36,7 +38,7 @@ public class Expense implements Serializable {
     }
 
     public String getAmount() {
-        return amount;
+        return "$"+amount;
     }
 
     public void setAmount(String amount) {
@@ -67,22 +69,24 @@ public class Expense implements Serializable {
         this.category = category;
     }
 
-    public String getDate() {
-        return date;
+    public String getCreatedAt() {
+        return DateUtils.stringToString(createdAt,DateUtils.SERVER_DATE,DateUtils.FULL_DATE);
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
-
-
-    public String getItemQuantity() {
-        return itemQuantity;
+    public String getNumberOfItems() {
+        return numberOfItems;
     }
 
-    public void setItemQuantity(String itemQuantity) {
-        this.itemQuantity = itemQuantity;
+    public void setNumberOfItems(String numberOfItems) {
+        this.numberOfItems = numberOfItems;
+    }
+
+    public boolean isNumberOfItemsEmptyOrNull(){
+        return numberOfItems == null || numberOfItems.isEmpty();
     }
 
     public String getDescription() {

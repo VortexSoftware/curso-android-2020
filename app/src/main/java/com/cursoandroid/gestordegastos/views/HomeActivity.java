@@ -20,6 +20,7 @@ import com.cursoandroid.gestordegastos.databinding.ActivityHomeBinding;
 import com.cursoandroid.gestordegastos.helpers.SessionPersistence;
 import com.cursoandroid.gestordegastos.models.Expense;
 import com.cursoandroid.gestordegastos.models.User;
+import com.cursoandroid.gestordegastos.repositories.HomeRepository;
 import com.cursoandroid.gestordegastos.viewModels.HomeViewModel;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding.setHomeViewModel(viewModel);
+        binding.setLifecycleOwner(this);
         viewModel.setupUserInfo();
         setupObservers();
     }
@@ -43,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setupRecyclerView();
+        viewModel.getExpensesFromServer();
     }
 
     private void setupObservers() {
@@ -53,10 +55,22 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this,NewExpenseActivity.class));
             }
         });
+        viewModel.getExpenses().observe(this, new Observer<ArrayList<Expense>>() {
+            @Override
+            public void onChanged(ArrayList<Expense> expenses) {
+                setupRecyclerView(expenses);
+            }
+        });
+        viewModel.getOnGetExpensesFailData().observe(this, new Observer<HomeRepository.OnGetExpensesFail>() {
+            @Override
+            public void onChanged(HomeRepository.OnGetExpensesFail onGetExpensesFail) {
+                Toast.makeText(HomeActivity.this, onGetExpensesFail.getError(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void setupRecyclerView() {
-        adapter = new ExpensesAdapter(viewModel.generateExpenses());
+    private void setupRecyclerView(ArrayList<Expense> expenses) {
+        adapter = new ExpensesAdapter(expenses);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.recyclerExpenses.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         binding.recyclerExpenses.setLayoutManager(linearLayoutManager);

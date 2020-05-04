@@ -5,6 +5,9 @@ import com.cursoandroid.gestordegastos.models.User;
 import com.cursoandroid.gestordegastos.network.RestClient;
 import com.cursoandroid.gestordegastos.network.responses.LoginResponse;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,22 +31,24 @@ public class LoginRepository {
 
     public void makeLoginToServer(String username, String password) {
         RestClient.getApiService().makeLogin(username, password)
-                .enqueue(new Callback<LoginResponse>() {
-                    @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful()) {
-                            saveUser(response.body().getUser());
-                            getOnLoginSuccesss().onNext(new OnLoginSuccess(response.body()));
-                        } else {
-                            getOnLoginFail().onNext(new OnLoginFail("Ha ocurrido un error"));
-                        }
-                    }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(makeLoginObserver());
+    }
 
-                    @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        getOnLoginFail().onNext(new OnLoginFail("Ha ocurrido un error"));
-                    }
-                });
+    public DisposableSingleObserver<LoginResponse> makeLoginObserver(){
+        return new DisposableSingleObserver<LoginResponse>() {
+            @Override
+            public void onSuccess(LoginResponse loginResponse) {
+                saveUser(loginResponse.getUser());
+                getOnLoginSuccesss().onNext(new OnLoginSuccess(loginResponse));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getOnLoginFail().onNext(new OnLoginFail("Ha ocurrido un error"));
+            }
+        };
     }
 
 

@@ -39,7 +39,7 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Expense expense = expenses.get(position);
-        holder.txtDate.setText(expense.getDate());
+        holder.txtDate.setText(expense.getCreatedAt());
         holder.txtAccount.setText(expense.getAccount().getName());
         holder.txtCategory.setText(expense.getProvider().getName());
         holder.txtAmount.setText(expense.getAmount());

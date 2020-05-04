@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
+        <import type="android.view.View"/>
         <variable
             name="detailExpenseViewModel"
             type="com.cursoandroid.gestordegastos.viewModels.DetailExpenseViewModel" />
@@ -27,7 +28,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:textColor="@color/black"
-                    android:text="@{detailExpenseViewModel.expense.date}"
+                    android:text="@{detailExpenseViewModel.expense.createdAt}"
                     android:textSize="20sp"
                     tools:text="Fecha" />
 
@@ -85,6 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:gravity="center"
+                    android:visibility="@{detailExpenseViewModel.expense.isNumberOfItemsEmptyOrNull?View.GONE:View.VISIBLE}"
                     android:orientation="horizontal">
 
                     <TextView
@@ -98,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="@{detailExpenseViewModel.expense.itemQuantity}"
+                        android:text="@{detailExpenseViewModel.expense.numberOfItems}"
                         android:textColor="@color/black"
                         tools:text="4" />
                 </LinearLayout>

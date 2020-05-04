@@ -92,7 +92,7 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
         viewModel.getQuantity().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                viewModel.getExpense().getValue().setItemQuantity(s);
+                viewModel.getExpense().getValue().setNumberOfItems(s);
             }
         });
     }
@@ -118,7 +118,7 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             Toast.makeText(this, "Ingrese una descripción", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (viewModel.getExpense().getValue().getItemQuantity()==null|| viewModel.getExpense().getValue().getItemQuantity().isEmpty()){
+        if (viewModel.getExpense().getValue().getNumberOfItems()==null|| viewModel.getExpense().getValue().getNumberOfItems().isEmpty()){
             Toast.makeText(this, "Ingrese una cantidad", Toast.LENGTH_SHORT).show();
             return false;
         }
