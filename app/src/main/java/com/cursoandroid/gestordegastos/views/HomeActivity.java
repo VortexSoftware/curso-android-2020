@@ -41,7 +41,6 @@ public class HomeActivity extends AppCompatActivity {
         setupObservers();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -52,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         viewModel.getButonNewExpense().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                startActivity(new Intent(HomeActivity.this,NewExpenseActivity.class));
+                startActivity(new Intent(HomeActivity.this, NewExpenseActivity.class));
             }
         });
         viewModel.getExpenses().observe(this, new Observer<ArrayList<Expense>>() {
@@ -83,9 +82,9 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void goToDetailExpenseActivity(Expense expense){
-        Intent intent = new Intent(this,DetailExpenseActivity.class);
-        intent.putExtra("expense",expense);
+    public void goToDetailExpenseActivity(Expense expense) {
+        Intent intent = new Intent(this, DetailExpenseActivity.class);
+        intent.putExtra("expense", expense);
         startActivity(intent);
     }
 
@@ -98,7 +97,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.buttonLogout){
+        if (id == R.id.buttonLogout) {
             logout();
         }
         return super.onOptionsItemSelected(item);
@@ -107,7 +106,7 @@ public class HomeActivity extends AppCompatActivity {
     private void logout() {
         SessionPersistence.deleteUser();
         SessionPersistence.deleteExpenses();
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }

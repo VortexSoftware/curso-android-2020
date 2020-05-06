@@ -5,22 +5,44 @@ import androidx.lifecycle.ViewModel;
 
 import com.cursoandroid.gestordegastos.models.Category;
 import com.cursoandroid.gestordegastos.models.Provider;
+import com.cursoandroid.gestordegastos.repositories.NewExpenseRepository;
 
 import java.util.ArrayList;
 
+import io.reactivex.functions.Consumer;
+
 public class ProviderSelectorViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Provider>> providers = new MutableLiveData<>();
+    private MutableLiveData<NewExpenseRepository.OnGetProvidersFail> onGetProvidersFail = new MutableLiveData<>();
+    private NewExpenseRepository newExpenseRepository;
+
+    public MutableLiveData<NewExpenseRepository.OnGetProvidersFail> getOnGetProvidersFail() {
+        return onGetProvidersFail;
+    }
+
 
     public MutableLiveData<ArrayList<Provider>> getProviders() {
-        generateProviders();
         return providers;
     }
 
-    public void generateProviders(){
-        providers.setValue(new ArrayList<Provider>());
-        providers.getValue().add(new Provider("1","proveedor 1"));
-        providers.getValue().add(new Provider("2","proveedor 2"));
-        providers.getValue().add(new Provider("3","proveedor 3"));
-        providers.getValue().add(new Provider("4","proveedor 4"));
+    public NewExpenseRepository getNewExpenseRepository() {
+        if (newExpenseRepository == null) {
+            newExpenseRepository = new NewExpenseRepository();
+            setupObservers();
+        }
+        return newExpenseRepository;
+    }
+
+    private void setupObservers() {
+        getNewExpenseRepository().getOnGetProvidersSuccessData().subscribe(onGetProvidersSuccess -> {
+            getProviders().setValue(onGetProvidersSuccess.getProviders());
+        });
+        getNewExpenseRepository().getOnGetProvidersFailData().subscribe(onGetProvidersFail -> {
+            getOnGetProvidersFail().setValue(onGetProvidersFail);
+        });
+    }
+
+    public void getProvidersFromServer(String categoryId) {
+        getNewExpenseRepository().getProviderFromServer(categoryId);
     }
 }

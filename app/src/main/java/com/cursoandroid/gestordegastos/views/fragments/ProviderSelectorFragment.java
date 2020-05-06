@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +19,10 @@ import com.cursoandroid.gestordegastos.R;
 import com.cursoandroid.gestordegastos.adapters.ProviderSelectorAdapter;
 import com.cursoandroid.gestordegastos.databinding.FragmentSelectorBinding;
 import com.cursoandroid.gestordegastos.models.Provider;
+import com.cursoandroid.gestordegastos.repositories.NewExpenseRepository;
 import com.cursoandroid.gestordegastos.viewModels.ProviderSelectorViewModel;
+
+import java.util.ArrayList;
 
 
 public class ProviderSelectorFragment extends Fragment {
@@ -26,25 +30,31 @@ public class ProviderSelectorFragment extends Fragment {
     private ProviderSelectorAdapter adapter;
     private ProviderSelectorViewModel viewModel;
     private ProviderSelectorFragmentListener listener;
+    private static final String CATEGORY_ID = "CATEGORY_ID";
+    private String categoryId;
 
     public ProviderSelectorFragment() {
         // Required empty public constructor
     }
 
-
-    public interface ProviderSelectorFragmentListener{
+    public interface ProviderSelectorFragmentListener {
         void onProviderSelected(Provider provider);
     }
 
-
-    public static ProviderSelectorFragment newInstance() {
-        return new ProviderSelectorFragment();
+    public static ProviderSelectorFragment newInstance(String categoryId) {
+        ProviderSelectorFragment fragment = new ProviderSelectorFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(CATEGORY_ID, categoryId);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            categoryId = getArguments().getString(CATEGORY_ID);
+        }
     }
 
     @Override
@@ -59,19 +69,42 @@ public class ProviderSelectorFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupRecycler();
+        viewModel.getProvidersFromServer(categoryId);
+        setupObservers();
     }
 
-    private void setupRecycler() {
-        adapter = new ProviderSelectorAdapter(viewModel.getProviders().getValue());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+    private void setupObservers() {
+        viewModel.getProviders().observe(this, new Observer<ArrayList<Provider>>() {
+            @Override
+            public void onChanged(ArrayList<Provider> providers) {
+                setupRecycler(providers);
+                if (providers.isEmpty()){
+                    binding.emptyListText.setText("No se encontraron proveedores");
+                }else {
+                    binding.emptyListText.setText("");
+
+                }
+                binding.layoutOverlay.setVisibility(View.GONE);
+            }
+        });
+        viewModel.getOnGetProvidersFail().observe(this, new Observer<NewExpenseRepository.OnGetProvidersFail>() {
+            @Override
+            public void onChanged(NewExpenseRepository.OnGetProvidersFail onGetProvidersFail) {
+                binding.layoutOverlay.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setupRecycler(ArrayList<Provider> providers) {
+        adapter = new ProviderSelectorAdapter(providers);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         binding.recyclerSelector.setLayoutManager(linearLayoutManager);
-        binding.recyclerSelector.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        binding.recyclerSelector.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         binding.recyclerSelector.setAdapter(adapter);
         adapter.setListener(new ProviderSelectorAdapter.ProviderSelectorListener() {
             @Override
             public void onAccountClick(Provider provider) {
-               if (listener!=null)listener.onProviderSelected(provider);
+                if (listener != null) listener.onProviderSelected(provider);
             }
         });
     }

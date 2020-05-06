@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class Currency implements Serializable {
     private String id;
     private String name;
-    private String Symbol;
+    private String symbol;
 
     public Currency(String symbol) {
-        Symbol = symbol;
+        this.symbol = symbol;
     }
 
     public String getId() {
@@ -28,10 +28,10 @@ public class Currency implements Serializable {
     }
 
     public String getSymbol() {
-        return Symbol;
+        return symbol;
     }
 
     public void setSymbol(String symbol) {
-        Symbol = symbol;
+        symbol = symbol;
     }
 }

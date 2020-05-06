@@ -4,13 +4,18 @@ import com.cursoandroid.gestordegastos.helpers.SessionPersistence;
 import com.cursoandroid.gestordegastos.models.User;
 import com.cursoandroid.gestordegastos.network.RestClient;
 import com.cursoandroid.gestordegastos.network.responses.LoginResponse;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 public class LoginRepository {
@@ -46,7 +51,16 @@ public class LoginRepository {
 
             @Override
             public void onError(Throwable e) {
-                getOnLoginFail().onNext(new OnLoginFail("Ha ocurrido un error"));
+                if (e instanceof HttpException) {
+                    ResponseBody body = ((HttpException) e).response().errorBody();
+                    try {
+                        JSONObject jObjError = new JSONObject(body.string());
+                        LoginResponse loginResponse = new Gson().fromJson(jObjError.toString(), LoginResponse.class);
+                        getOnLoginFail().onNext(new OnLoginFail(loginResponse.getError()));
+                    } catch (Exception ex) {
+                        getOnLoginFail().onNext(new OnLoginFail(ex.getMessage()));
+                    }
+                }
             }
         };
     }

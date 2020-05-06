@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,8 @@ import com.cursoandroid.gestordegastos.adapters.AccountSelectorAdapter;
 import com.cursoandroid.gestordegastos.databinding.FragmentSelectorBinding;
 import com.cursoandroid.gestordegastos.models.Account;
 import com.cursoandroid.gestordegastos.viewModels.AccountSelectorViewModel;
+
+import java.util.ArrayList;
 
 
 public class AccountSelectorFragment extends Fragment {
@@ -61,20 +64,35 @@ public class AccountSelectorFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupRecycler();
+        viewModel.getAccountsFromServer();
+        binding.layoutOverlay.setVisibility(View.VISIBLE);
+        setupObservers();
     }
 
-    private void setupRecycler() {
-        adapter = new AccountSelectorAdapter(viewModel.getAccounts().getValue());
+    private void setupObservers() {
+        viewModel.getAccounts().observe(this, accounts -> {
+            setupRecycler(accounts);
+            if (accounts.isEmpty()){
+                binding.emptyListText.setText("No se encontraron cuentas disponibles");
+            }else {
+                binding.emptyListText.setText("");
+
+            }
+            binding.layoutOverlay.setVisibility(View.GONE);
+        });
+        viewModel.getOnGetAccountFail().observe(this,onGetAccountsFail -> {
+            binding.layoutOverlay.setVisibility(View.GONE);
+        });
+    }
+
+    private void setupRecycler(ArrayList<Account> accounts) {
+        adapter = new AccountSelectorAdapter(accounts);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         binding.recyclerSelector.setLayoutManager(linearLayoutManager);
         binding.recyclerSelector.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         binding.recyclerSelector.setAdapter(adapter);
-        adapter.setListener(new AccountSelectorAdapter.AccountSelectorListener() {
-            @Override
-            public void onAccountClick(Account account) {
-                if (listener != null) listener.onAccountSelected(account);
-            }
+        adapter.setListener(account -> {
+            if (listener != null) listener.onAccountSelected(account);
         });
     }
 

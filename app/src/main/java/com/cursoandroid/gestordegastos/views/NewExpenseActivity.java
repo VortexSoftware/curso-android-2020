@@ -63,7 +63,7 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             @Override
             public void onChanged(Boolean aBoolean) {
                 getSupportActionBar().setTitle("Seleccione un proveedor");
-                ProviderSelectorFragment providerSelectorFragment = ProviderSelectorFragment.newInstance();
+                ProviderSelectorFragment providerSelectorFragment = ProviderSelectorFragment.newInstance(viewModel.getExpense().getValue().getCategory().getId());
                 showFragment(providerSelectorFragment);
             }
         });
@@ -179,6 +179,7 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
     public void onCategorySelected(Category category) {
         Expense expense = viewModel.getExpense().getValue();
         expense.setCategory(category);
+        viewModel.getExpense().getValue().setProvider(null);
         viewModel.getExpense().setValue(expense);
         removeFragmnts();
     }
