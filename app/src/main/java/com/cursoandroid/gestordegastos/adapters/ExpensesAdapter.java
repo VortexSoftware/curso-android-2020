@@ -42,7 +42,7 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
         holder.txtDate.setText(expense.getCreatedAt());
         holder.txtAccount.setText(expense.getAccount().getName());
         holder.txtCategory.setText(expense.getProvider().getName());
-        holder.txtAmount.setText(expense.getAmount());
+        holder.txtAmount.setText(expense.getAmountAsString());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -72,8 +72,7 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             @Override
             public void onChanged(Boolean aBoolean) {
                if (validateFields()){
-                   viewModel.saveExpense();
-                   showSuccessDialog().show();
+                   viewModel.createNewExpense();
                }
             }
         });
@@ -94,6 +93,12 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             public void onChanged(String s) {
                 viewModel.getExpense().getValue().setNumberOfItems(s);
             }
+        });
+        viewModel.getOnCreateExpenseSuccessMutableLiveData().observe(this,onCreateExpenseSuccess -> {
+            showSuccessDialog(onCreateExpenseSuccess.getCreateExpenseResponse().getMessage()).show();
+        });
+        viewModel.getOnCreateExpenseFailMutableLiveData().observe(this,onCreateExpenseFail -> {
+            Toast.makeText(this, onCreateExpenseFail.getError(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -118,7 +123,8 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             Toast.makeText(this, "Ingrese una descripción", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (viewModel.getExpense().getValue().getNumberOfItems()==null|| viewModel.getExpense().getValue().getNumberOfItems().isEmpty()){
+        if ((viewModel.getExpense().getValue().getNumberOfItems()==null|| viewModel.getExpense().getValue().getNumberOfItems().isEmpty())
+        && viewModel.getExpense().getValue().getCategory().isNeedsNumberOfItemsInExpenses()){
             Toast.makeText(this, "Ingrese una cantidad", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -153,12 +159,12 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
     }
 
 
-    public AlertDialog.Builder showSuccessDialog(){
+    public AlertDialog.Builder showSuccessDialog(String message){
         return new AlertDialog.Builder(
                 this)
                 .setTitle("Registro exitoso")
                 .setCancelable(false)
-                .setMessage("Gasto registrado exitosamente")
+                .setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

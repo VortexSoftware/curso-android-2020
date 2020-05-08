@@ -38,7 +38,11 @@ public class Expense implements Serializable {
     }
 
     public String getAmount() {
-        return "$"+amount;
+        return amount;
+    }
+
+    public String getAmountAsString(){
+        return "$"+getAmount();
     }
 
     public void setAmount(String amount) {

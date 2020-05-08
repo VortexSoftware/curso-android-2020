@@ -76,7 +76,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:textColor="@color/darkBlue"
-                    android:text="@{detailExpenseViewModel.expense.amount}"
+                    android:text="@{detailExpenseViewModel.expense.amountAsString}"
                     android:textSize="32sp"
                     tools:text="$457" />
 

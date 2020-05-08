@@ -6,6 +6,8 @@ import com.cursoandroid.gestordegastos.models.Category;
 import com.cursoandroid.gestordegastos.models.Expense;
 import com.cursoandroid.gestordegastos.models.Provider;
 import com.cursoandroid.gestordegastos.network.RestClient;
+import com.cursoandroid.gestordegastos.network.requests.CreateExpenseRequest;
+import com.cursoandroid.gestordegastos.network.responses.CreateExpenseResponse;
 import com.cursoandroid.gestordegastos.network.responses.LoginResponse;
 import com.google.gson.Gson;
 
@@ -27,7 +29,16 @@ public class NewExpenseRepository {
     private PublishSubject<OnGetCategoryFail> onGetCategoriesFailData = PublishSubject.create();
     private PublishSubject<OnGetProvidersSuccess> onGetProvidersSuccessData = PublishSubject.create();
     private PublishSubject<OnGetProvidersFail> onGetProvidersFailData = PublishSubject.create();
+    private PublishSubject<OnCreateExpenseSuccess> onCreateExpenseSuccessData = PublishSubject.create();
+    private PublishSubject<OnCreateExpenseFail> onCreateExpenseFailData = PublishSubject.create();
 
+    public PublishSubject<OnCreateExpenseSuccess> getOnCreateExpenseSuccessData() {
+        return onCreateExpenseSuccessData;
+    }
+
+    public PublishSubject<OnCreateExpenseFail> getOnCreateExpenseFailData() {
+        return onCreateExpenseFailData;
+    }
 
     public PublishSubject<OnGetProvidersSuccess> getOnGetProvidersSuccessData() {
         return onGetProvidersSuccessData;
@@ -83,14 +94,14 @@ public class NewExpenseRepository {
         };
     }
 
-    public void getCategoriesFromServer(){
+    public void getCategoriesFromServer() {
         RestClient.getApiService().getCategories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(getCategoriesObserver());
     }
 
-    public DisposableSingleObserver<ArrayList<Category>> getCategoriesObserver(){
+    public DisposableSingleObserver<ArrayList<Category>> getCategoriesObserver() {
         return new DisposableSingleObserver<ArrayList<Category>>() {
             @Override
             public void onSuccess(ArrayList<Category> categories) {
@@ -113,7 +124,7 @@ public class NewExpenseRepository {
         };
     }
 
-    public void getProviderFromServer(String id){
+    public void getProviderFromServer(String id) {
         RestClient.getApiService().getProviders(Integer.parseInt(id))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -121,7 +132,7 @@ public class NewExpenseRepository {
     }
 
 
-    public DisposableSingleObserver<ArrayList<Provider>> getProviderObserver(){
+    public DisposableSingleObserver<ArrayList<Provider>> getProviderObserver() {
         return new DisposableSingleObserver<ArrayList<Provider>>() {
             @Override
             public void onSuccess(ArrayList<Provider> providers) {
@@ -140,6 +151,27 @@ public class NewExpenseRepository {
                         getOnGetProvidersFailData().onNext(new OnGetProvidersFail(ex.getMessage()));
                     }
                 }
+            }
+        };
+    }
+
+    public void createExpense(CreateExpenseRequest createExpenseRequest) {
+        RestClient.getApiService().createNewExpense(createExpenseRequest)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(createExpenseObserver());
+    }
+
+    public DisposableSingleObserver<CreateExpenseResponse> createExpenseObserver() {
+        return new DisposableSingleObserver<CreateExpenseResponse>() {
+            @Override
+            public void onSuccess(CreateExpenseResponse createExpenseResponse) {
+                getOnCreateExpenseSuccessData().onNext(new OnCreateExpenseSuccess(createExpenseResponse));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getOnCreateExpenseFailData().onNext(new OnCreateExpenseFail("Error"));
             }
         };
     }
@@ -196,7 +228,7 @@ public class NewExpenseRepository {
         }
     }
 
-    public class OnGetProvidersSuccess{
+    public class OnGetProvidersSuccess {
         private ArrayList<Provider> providers;
 
         public OnGetProvidersSuccess(ArrayList<Provider> providers) {
@@ -212,6 +244,30 @@ public class NewExpenseRepository {
         private String error;
 
         public OnGetProvidersFail(String error) {
+            this.error = error;
+        }
+
+        public String getError() {
+            return error;
+        }
+    }
+
+    public class OnCreateExpenseSuccess {
+        private CreateExpenseResponse createExpenseResponse;
+
+        public OnCreateExpenseSuccess(CreateExpenseResponse createExpenseResponse) {
+            this.createExpenseResponse = createExpenseResponse;
+        }
+
+        public CreateExpenseResponse getCreateExpenseResponse() {
+            return createExpenseResponse;
+        }
+    }
+
+    public class OnCreateExpenseFail {
+        private String error;
+
+        public OnCreateExpenseFail(String error) {
             this.error = error;
         }
 
